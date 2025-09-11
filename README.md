@@ -1,6 +1,6 @@
 # IT5007-Lecture5
 
-* Download the docker image from https://www.dropbox.com/scl/fi/phubeweift0r7gbgdymmr/docker_image_mongo.tar?rlkey=lqobn30rm8jc2n230ptu4nxsa&st=w0edwrkh&dl=0
+* Download the docker image from [https://www.dropbox.com/scl/fi/phubeweift0r7gbgdymmr/docker_image_mongo.tar?rlkey=lqobn30rm8jc2n230ptu4nxsa&st=w0edwrkh&dl=0](https://www.dropbox.com/scl/fi/phubeweift0r7gbgdymmr/docker_image_mongo.tar?rlkey=lqobn30rm8jc2n230ptu4nxsa&st=0pq9t9kc&dl=0)
 * For Windows, navigate to the download folder, and launch powershell and import the image as follows
 ```docker load -i docker_image_mongo.tar```
 * Launch a container from this image using
