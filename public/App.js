@@ -1,87 +1,122 @@
 "use strict";
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-var IssueFilter = /*#__PURE__*/function (_React$Component) {
-  _inherits(IssueFilter, _React$Component);
-  var _super = _createSuper(IssueFilter);
-  function IssueFilter() {
-    _classCallCheck(this, IssueFilter);
-    return _super.apply(this, arguments);
+function _typeof(o) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) { return typeof o; } : function (o) { return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o; }, _typeof(o); }
+function _classCallCheck(a, n) { if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function"); }
+function _defineProperties(e, r) { for (var t = 0; t < r.length; t++) { var o = r[t]; o.enumerable = o.enumerable || !1, o.configurable = !0, "value" in o && (o.writable = !0), Object.defineProperty(e, _toPropertyKey(o.key), o); } }
+function _createClass(e, r, t) { return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", { writable: !1 }), e; }
+function _toPropertyKey(t) { var i = _toPrimitive(t, "string"); return "symbol" == _typeof(i) ? i : i + ""; }
+function _toPrimitive(t, r) { if ("object" != _typeof(t) || !t) return t; var e = t[Symbol.toPrimitive]; if (void 0 !== e) { var i = e.call(t, r || "default"); if ("object" != _typeof(i)) return i; throw new TypeError("@@toPrimitive must return a primitive value."); } return ("string" === r ? String : Number)(t); }
+function _callSuper(t, o, e) { return o = _getPrototypeOf(o), _possibleConstructorReturn(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], _getPrototypeOf(t).constructor) : o.apply(t, e)); }
+function _possibleConstructorReturn(t, e) { if (e && ("object" == _typeof(e) || "function" == typeof e)) return e; if (void 0 !== e) throw new TypeError("Derived constructors may only return object or undefined"); return _assertThisInitialized(t); }
+function _assertThisInitialized(e) { if (void 0 === e) throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); return e; }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+function _getPrototypeOf(t) { return _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function (t) { return t.__proto__ || Object.getPrototypeOf(t); }, _getPrototypeOf(t); }
+function _inherits(t, e) { if ("function" != typeof e && null !== e) throw new TypeError("Super expression must either be null or a function"); t.prototype = Object.create(e && e.prototype, { constructor: { value: t, writable: !0, configurable: !0 } }), Object.defineProperty(t, "prototype", { writable: !1 }), e && _setPrototypeOf(t, e); }
+function _setPrototypeOf(t, e) { return _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function (t, e) { return t.__proto__ = e, t; }, _setPrototypeOf(t, e); }
+// App.jsx
+// IT5007 Assignment-1: TicketMaster
+//
+// Starter Skeleton (Entry-Level)
+//
+// IMPORTANT:
+// - This template is LLM generated and may have mistakes.
+// - It is the students responsiblity to fix mistakes in  template, if any.
+// - Students must fill in state, CRUD operations, and UI behavior.
+// - Search for "TODO" markers.
+/* =========================================
+   MAIN APP COMPONENT
+========================================= */
+var App = /*#__PURE__*/function (_React$Component) {
+  function App() {
+    _classCallCheck(this, App);
+    return _callSuper(this, App, arguments);
   }
-  _createClass(IssueFilter, [{
+  _inherits(App, _React$Component);
+  return _createClass(App, [{
     key: "render",
     value: function render() {
-      var systemnameinfilter = this.props.name;
-      return /*#__PURE__*/React.createElement("div", null, "This is a placeholder for the issue filter in ", systemnameinfilter, ".");
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "TicketMaster Reservation System"), /*#__PURE__*/React.createElement(NavBar, null));
     }
   }]);
-  return IssueFilter;
 }(React.Component);
-var IssueTable = /*#__PURE__*/function (_React$Component2) {
-  _inherits(IssueTable, _React$Component2);
-  var _super2 = _createSuper(IssueTable);
-  function IssueTable() {
-    _classCallCheck(this, IssueTable);
-    return _super2.apply(this, arguments);
+/* =========================================
+   NAVIGATION BAR COMPONENT (Q2)
+========================================= */
+var NavBar = /*#__PURE__*/function (_React$Component2) {
+  function NavBar() {
+    _classCallCheck(this, NavBar);
+    return _callSuper(this, NavBar, arguments);
   }
-  _createClass(IssueTable, [{
+  _inherits(NavBar, _React$Component2);
+  return _createClass(NavBar, [{
     key: "render",
     value: function render() {
-      var systemnameintable = this.props.name;
-      return /*#__PURE__*/React.createElement("div", null, "This is a placeholder for a table of issues in ", systemnameintable, ".");
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, "Navigation"));
     }
   }]);
-  return IssueTable;
 }(React.Component);
-var IssueAdd = /*#__PURE__*/function (_React$Component3) {
-  _inherits(IssueAdd, _React$Component3);
-  var _super3 = _createSuper(IssueAdd);
-  function IssueAdd() {
-    _classCallCheck(this, IssueAdd);
-    return _super3.apply(this, arguments);
+/* =========================================
+   DISPLAY ATTENDEES COMPONENT (Q3)
+========================================= */
+var DisplayAttendees = /*#__PURE__*/function (_React$Component3) {
+  function DisplayAttendees() {
+    _classCallCheck(this, DisplayAttendees);
+    return _callSuper(this, DisplayAttendees, arguments);
   }
-  _createClass(IssueAdd, [{
+  _inherits(DisplayAttendees, _React$Component3);
+  return _createClass(DisplayAttendees, [{
     key: "render",
     value: function render() {
-      var systemnameinadd = this.props.name;
-      return /*#__PURE__*/React.createElement("div", null, "This is a placeholder for a form to add an issue in ", systemnameinadd, ".");
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, "Attendee List"));
     }
   }]);
-  return IssueAdd;
 }(React.Component);
-var IssueList = /*#__PURE__*/function (_React$Component4) {
-  _inherits(IssueList, _React$Component4);
-  var _super4 = _createSuper(IssueList);
-  function IssueList() {
-    _classCallCheck(this, IssueList);
-    return _super4.apply(this, arguments);
+/* =========================================
+   ADD ATTENDEE COMPONENT (Q4)
+========================================= */
+var AddAttendee = /*#__PURE__*/function (_React$Component4) {
+  function AddAttendee() {
+    _classCallCheck(this, AddAttendee);
+    return _callSuper(this, AddAttendee, arguments);
   }
-  _createClass(IssueList, [{
+  _inherits(AddAttendee, _React$Component4);
+  return _createClass(AddAttendee, [{
     key: "render",
     value: function render() {
-      var systemname = "IT5007 Bug Tracker";
-      return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", null, systemname), /*#__PURE__*/React.createElement(IssueFilter, {
-        name: systemname
-      }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(IssueTable, {
-        name: systemname
-      }), /*#__PURE__*/React.createElement("hr", null), /*#__PURE__*/React.createElement(IssueAdd, {
-        name: systemname
-      }), /*#__PURE__*/React.createElement("hr", null));
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, "Add Attendee Reservation"));
     }
   }]);
-  return IssueList;
 }(React.Component);
-var element = /*#__PURE__*/React.createElement(IssueList, null);
-ReactDOM.render(element, document.getElementById('contents'));
+/* =========================================
+   DELETE ATTENDEE COMPONENT (Q5)
+========================================= */
+var DeleteAttendee = /*#__PURE__*/function (_React$Component5) {
+  function DeleteAttendee() {
+    _classCallCheck(this, DeleteAttendee);
+    return _callSuper(this, DeleteAttendee, arguments);
+  }
+  _inherits(DeleteAttendee, _React$Component5);
+  return _createClass(DeleteAttendee, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, "Cancel Reservation"));
+    }
+  }]);
+}(React.Component);
+/* =========================================
+   SEAT MAP VISUALIZATION (Q6)
+========================================= */
+var SeatMap = /*#__PURE__*/function (_React$Component6) {
+  function SeatMap() {
+    _classCallCheck(this, SeatMap);
+    return _callSuper(this, SeatMap, arguments);
+  }
+  _inherits(SeatMap, _React$Component6);
+  return _createClass(SeatMap, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h2", null, "Seat Map"));
+    }
+  }]);
+}(React.Component);
+ReactDOM.render(/*#__PURE__*/React.createElement(App, null), document.getElementById("contents"));

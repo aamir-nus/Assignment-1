@@ -1,5 +1,5 @@
 {
-  "name": "it5007-lecture5",
+  "name": "Assignment1 ",
   "version": "1.0.0",
   "description": "NUS IT5007",
   "main": "index.js",
@@ -20,13 +20,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/pkarthik88/IT5007-Lecture5.git"
+    "type": "git"
   },
   "author": "Prasanna Karthik Vairam",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/pkarthik88/IT5007-Lecture5/issues"
-  },
-  "homepage": "https://github.com/pkarthik88/IT5007-Lecture5#readme"
+  "license": "ISC"
 }
