@@ -14,27 +14,33 @@
    MAIN APP COMPONENT
 ========================================= */
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      currentView: 'home', // simle home, display, add, delete, seatmap
+      attendees: [] // arr to store reservation data
+    };
+  }
+
+  // Handler to switch between views
+  handleViewChange = (view) => {
+    this.setState({ currentView: view });
+  }
+
   render() {
     return (
       <div>
         <h1>TicketMaster Reservation System</h1>
 
-        {/* TODO (Q2): Add Navigation Bar Component */}
-        <NavBar />
+        {/* navbar cmoponent */}
+        <NavBar currentView={this.state.currentView} onViewChange={this.handleViewChange} />
 
-        {/* TODO (Q2): Show ONE component at a time based on navigation */}
-
-        {/* TODO (Q3): Display Attendee Table */}
-        {/* <DisplayAttendees /> */}
-
-        {/* TODO (Q4): Add Attendee Form */}
-        {/* <AddAttendee /> */}
-
-        {/* TODO (Q5): Delete Attendee Form */}
-        {/* <DeleteAttendee /> */}
-
-        {/* TODO (Q6): Seat Map Visualization */}
-        {/* <SeatMap /> */}
+        {/* render components based on navigation */}
+        {this.state.currentView === 'home' && <div><p>Welcome to TicketMaster Reservation System</p></div>}
+        {this.state.currentView === 'display' && <DisplayAttendees attendees={this.state.attendees} />}
+        {this.state.currentView === 'add' && <AddAttendee />}
+        {this.state.currentView === 'delete' && <DeleteAttendee />}
+        {this.state.currentView === 'seatmap' && <SeatMap attendees={this.state.attendees} />}
       </div>
     );
   }
@@ -45,14 +51,62 @@ class App extends React.Component {
 ========================================= */
 class NavBar extends React.Component {
   render() {
-    return (
-      <div>
-        <h2>Navigation</h2>
+    const { currentView, onViewChange } = this.props;
 
-        {/* TODO: Add buttons for switching views */}
-        {/* Example:
-            Home | Display Attendees | Add Attendee | Delete Attendee | Seat Map
-        */}
+    // button style helper
+    const buttonStyle = {
+      margin: '5px',
+      padding: '10px 15px',
+      cursor: 'pointer',
+      backgroundColor: '#f0f0f0',
+      border: '1px solid #ccc',
+      borderRadius: '4px'
+    };
+
+    // active button style
+    const activeStyle = {
+      ...buttonStyle,
+      backgroundColor: '#007bff',
+      color: 'white',
+      borderColor: '#0056b3'
+    };
+
+    return (
+      <div style={{ marginBottom: '20px',
+                  padding: '10px',
+                  backgroundColor: '#f8f9fa',
+                  borderRadius: '5px' }}>
+        <h2 style={{ marginTop: '0' }}>Navigation</h2>
+        <button
+          style={currentView === 'home' ? activeStyle : buttonStyle}
+          onClick={() => onViewChange('home')}
+        >
+          Home
+        </button>
+        <button
+          style={currentView === 'display' ? activeStyle : buttonStyle}
+          onClick={() => onViewChange('display')}
+        >
+          Display Attendees
+        </button>
+        <button
+          style={currentView === 'add' ? activeStyle : buttonStyle}
+          onClick={() => onViewChange('add')}
+        >
+          Add Attendee
+        </button>
+        <button
+          style={currentView === 'delete' ? activeStyle : buttonStyle}
+          onClick={() => onViewChange('delete')}
+        >
+          Delete Attendee
+        </button>
+        <button
+          style={currentView === 'seatmap' ? activeStyle : buttonStyle}
+          onClick={() => onViewChange('seatmap')}
+        >
+          Seat Map
+        </button>
       </div>
     );
   }
