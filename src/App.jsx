@@ -27,6 +27,13 @@ class App extends React.Component {
     this.setState({ currentView: view });
   }
 
+  // Handler to add new attendee
+  handleAddAttendee = (attendee) => {
+    this.setState((prevState) => ({
+      attendees: [...prevState.attendees, attendee]
+    }));
+  }
+
   render() {
     return (
       <div>
@@ -38,7 +45,7 @@ class App extends React.Component {
         {/* render components based on navigation */}
         {this.state.currentView === 'home' && <div><p>Welcome to TicketMaster Reservation System</p></div>}
         {this.state.currentView === 'display' && <DisplayAttendees attendees={this.state.attendees} />}
-        {this.state.currentView === 'add' && <AddAttendee />}
+        {this.state.currentView === 'add' && <AddAttendee onAddAttendee={this.handleAddAttendee} attendees={this.state.attendees} />}
         {this.state.currentView === 'delete' && <DeleteAttendee />}
         {this.state.currentView === 'seatmap' && <SeatMap attendees={this.state.attendees} />}
       </div>
@@ -170,18 +177,174 @@ class DisplayAttendees extends React.Component {
    ADD ATTENDEE COMPONENT (Q4)
 ========================================= */
 class AddAttendee extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      name: '',
+      phone: '',
+      category: 'Silver',
+      error: '',
+      success: ''
+    };
+  }
+
+  // input changes
+  handleInputChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value, error: '', success: '' });
+  }
+
+  // find first available seat from 1:10
+  findAvailableSeat = () => {
+    const occupiedSeats = this.props.attendees.map(a => a.seatNumber);
+    for (let seat = 1; seat <= 10; seat++) {
+      if (!occupiedSeats.includes(seat)) {
+        return seat;
+      }
+    }
+    return null; // all seats are occupied
+  }
+
+  // form submission
+  handleSubmit = (event) => {
+    event.preventDefault();
+
+    const { name, phone, category } = this.state;
+
+    // validate req fields
+    if (!name.trim() || !phone.trim()) {
+      this.setState({ error: 'Please fill in all fields.' });
+      return;
+    }
+
+    // validate if all seats are full
+    if (this.props.attendees.length >= 10) {
+      this.setState({ error: 'All seats are occupied! Maximum capacity reached.' });
+      return;
+    }
+
+    // allocate seat
+    const seatNumber = this.findAvailableSeat();
+
+    if (seatNumber === null) {
+      this.setState({ error: 'No available seats!' });
+      return;
+    }
+
+    // create new attendee
+    const newAttendee = {
+      seatNumber,
+      name: name.trim(),
+      phone: phone.trim(),
+      category
+    };
+
+    // handler is parent handler, call it to add attendee to main state
+    this.props.onAddAttendee(newAttendee);
+
+    // reset form and display success message
+    this.setState({
+      name: '',
+      phone: '',
+      category: 'Silver',
+      error: '',
+      success: `Reservation added successfully! Seat ${seatNumber} assigned.`
+    });
+  }
+
   render() {
+    const { name, phone, category, error, success } = this.state;
+    const availableSeats = 10 - this.props.attendees.length;
+
     return (
       <div>
         <h2>Add Attendee Reservation</h2>
 
-        {/* TODO: Create a form with fields:
-            Name, Phone, Ticket Category (Gold/Silver)
-        */}
+        {error && (
+          <div style={{ color: '#dc3545',
+                        backgroundColor: '#f8d7da',
+                        padding: '10px',
+                        borderRadius: '4px',
+                        marginBottom: '15px' }}>
+            {error}
+          </div>
+        )}
 
-        {/* TODO: On Submit → Add attendee into reservation list */}
+        {success && (
+          <div style={{ color: '#155724',
+                        backgroundColor: '#d4edda',
+                        padding: '10px',
+                        borderRadius: '4px',
+                        marginBottom: '15px' }}>
+            {success}
+          </div>
+        )}
 
-        {/* TODO: Allocate seat number (1–10) */}
+        <form onSubmit={this.handleSubmit} style={{ maxWidth: '500px' }}>
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              Name: <span style={{ color: 'red' }}>*</span>
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={this.handleInputChange}
+              placeholder="Enter full name"
+              style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+              required
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              Phone: <span style={{ color: 'red' }}>*</span>
+            </label>
+            <input
+              type="tel"
+              name="phone"
+              value={phone}
+              onChange={this.handleInputChange}
+              placeholder="Enter phone number"
+              style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+              required
+            />
+          </div>
+
+          <div style={{ marginBottom: '15px' }}>
+            <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+              Ticket Category:
+            </label>
+            <select
+              name="category"
+              value={category}
+              onChange={this.handleInputChange}
+              style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+            >
+              <option value="Silver">Silver</option>
+              <option value="Gold">Gold</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            style={{
+              padding: '10px 20px',
+              backgroundColor: '#28a745',
+              color: 'white',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer',
+              fontSize: '16px'
+            }}
+          >
+            Add Reservation
+          </button>
+        </form>
+
+        <p style={{ marginTop: '20px', color: '#666' }}>
+          Available Seats: {availableSeats} / 10
+        </p>
       </div>
     );
   }
