@@ -117,17 +117,50 @@ class NavBar extends React.Component {
 ========================================= */
 class DisplayAttendees extends React.Component {
   render() {
+    const { attendees } = this.props; // set props from parent
+
     return (
       <div>
         <h2>Attendee List</h2>
 
-        {/* TODO: Fetch attendee data from App.jsx variable/state */}
+        {attendees.length === 0 ? (
+          <p style={{ color: '#666',
+                    fontStyle: 'italic' }}>No reservations yet. Add an attendee to get started!</p>
+        ) : (
+          <table className="bordered-table" style={{ width: '100%', maxWidth: '800px' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f0f0f0' }}>
+                <th style={{ padding: '12px', textAlign: 'left' }}>Seat Number</th>
+                <th style={{ padding: '12px', textAlign: 'left' }}>Name</th>
+                <th style={{ padding: '12px', textAlign: 'left' }}>Phone</th>
+                <th style={{ padding: '12px', textAlign: 'left' }}>Ticket Category</th>
+              </tr>
+            </thead>
+            <tbody>
+              {attendees.map((attendee) => (
+                <tr key={attendee.seatNumber}>
+                  <td style={{ padding: '8px' }}>{attendee.seatNumber}</td>
+                  <td style={{ padding: '8px' }}>{attendee.name}</td>
+                  <td style={{ padding: '8px' }}>{attendee.phone}</td>
+                  <td style={{ padding: '8px' }}>
+                    <span style={{
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      backgroundColor: attendee.category === 'Gold' ? '#ffd700' : '#c0c0c0',
+                      fontWeight: 'bold'
+                    }}>
+                      {attendee.category}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
 
-        {/* TODO: Display attendees in a table format */}
-
-        {/* Table Columns should include:
-            Seat Number | Name | Phone | Ticket Category
-        */}
+        <p style={{ marginTop: '20px', color: '#666' }}>
+          Total Reservations: {attendees.length} / 10
+        </p>
       </div>
     );
   }
