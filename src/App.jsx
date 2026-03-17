@@ -603,19 +603,141 @@ class DeleteAttendee extends React.Component {
    SEAT MAP VISUALIZATION (Q6)
 ========================================= */
 class SeatMap extends React.Component {
+  getSeatStatus = (seatNumber) => {
+    const attendee = this.props.attendees.find(a => a.seatNumber === seatNumber);
+    if (!attendee) return 'available';
+    return attendee.category.toLowerCase(); // 'gold' or 'silver'
+  }
+
+  getSeatColor = (status) => {
+    switch (status) {
+      case 'available': return '#28a745'; // green
+      case 'gold': return '#ffd700'; // gold
+      case 'silver': return '#c0c0c0'; // silver
+      default: return '#28a745';
+    }
+  }
+
+  getSeatTextColor = (status) => {
+    return status === 'available' ? 'white' : 'black';
+  }
+
   render() {
+    // arr of 10 seats, start from 1
+    const seats = Array.from({ length: 10 }, (_, i) => i + 1);
+
     return (
       <div>
         <h2>Seat Map</h2>
 
-        {/* TODO: Display 10 seats visually */}
+        {/* legend */}
+        <div style={{ marginBottom: '20px', padding: '15px', backgroundColor: '#f8f9fa', borderRadius: '5px' }}>
+          <strong>Legend:</strong>
+          <span style={{ display: 'inline-block', marginLeft: '20px' }}>
+            <span style={{
+              display: 'inline-block',
+              width: '20px',
+              height: '20px',
+              backgroundColor: '#28a745',
+              marginRight: '5px',
+              borderRadius: '3px'
+            }}></span>
+            Available
+          </span>
+          <span style={{ display: 'inline-block', marginLeft: '20px' }}>
+            <span style={{
+              display: 'inline-block',
+              width: '20px',
+              height: '20px',
+              backgroundColor: '#ffd700',
+              marginRight: '5px',
+              borderRadius: '3px',
+              border: '1px solid #daa520'
+            }}></span>
+            Gold
+          </span>
+          <span style={{ display: 'inline-block', marginLeft: '20px' }}>
+            <span style={{
+              display: 'inline-block',
+              width: '20px',
+              height: '20px',
+              backgroundColor: '#c0c0c0',
+              marginRight: '5px',
+              borderRadius: '3px',
+              border: '1px solid #999'
+            }}></span>
+            Silver
+          </span>
+        </div>
 
-        {/* Rules:
-            - Empty seats → Green
-            - Reserved Gold seats → Gold
-            - Reserved Silver seats → Silver
-            - Seats must show seat number (1–10)
-        */}
+        {/* seat grid for 2x5 */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(5, 1fr)',
+          gap: '15px',
+          maxWidth: '600px',
+          marginBottom: '20px'
+        }}>
+          {seats.map((seatNumber) => {
+            const status = this.getSeatStatus(seatNumber);
+            const attendee = this.props.attendees.find(a => a.seatNumber === seatNumber);
+
+            return (
+              <div
+                key={seatNumber}
+                title={attendee ? `${attendee.name} (${attendee.category})` : 'Available'}
+                style={{
+                  width: '100px',
+                  height: '80px',
+                  backgroundColor: this.getSeatColor(status),
+                  color: this.getSeatTextColor(status),
+                  border: '2px solid #333',
+                  borderRadius: '8px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                  transition: 'transform 0.2s',
+                  fontWeight: 'bold'
+                }}
+                onMouseOver={(e) => e.target.style.transform = 'scale(1.05)'}
+                onMouseOut={(e) => e.target.style.transform = 'scale(1)'}
+              >
+                <div style={{ fontSize: '24px', marginBottom: '5px' }}>
+                  {seatNumber}
+                </div>
+                <div style={{ fontSize: '12px' }}>
+                  {status === 'available' ? 'Empty' : status}
+                </div>
+                {attendee && (
+                  <div style={{ fontSize: '10px', marginTop: '3px', fontWeight: 'normal' }}>
+                    {attendee.name}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* stage indicator*/}
+        <div style={{
+          marginTop: '30px',
+          padding: '15px',
+          backgroundColor: '#e9ecef',
+          borderRadius: '5px',
+          textAlign: 'center',
+          fontStyle: 'italic'
+        }}>
+          ← STAGE →
+        </div>
+
+        {/* stats */}
+        <div style={{ marginTop: '20px', color: '#666' }}>
+          <p>Available: {10 - this.props.attendees.length} / 10 seats</p>
+          <p>Gold Reservations: {this.props.attendees.filter(a => a.category === 'Gold').length}</p>
+          <p>Silver Reservations: {this.props.attendees.filter(a => a.category === 'Silver').length}</p>
+        </div>
       </div>
     );
   }
