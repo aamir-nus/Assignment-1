@@ -34,6 +34,13 @@ class App extends React.Component {
     }));
   }
 
+  // Handler to delete attendee
+  handleDeleteAttendee = (seatNumber) => {
+    this.setState((prevState) => ({
+      attendees: prevState.attendees.filter(a => a.seatNumber !== seatNumber)
+    }));
+  }
+
   render() {
     return (
       <div>
@@ -46,7 +53,7 @@ class App extends React.Component {
         {this.state.currentView === 'home' && <div><p>Welcome to TicketMaster Reservation System</p></div>}
         {this.state.currentView === 'display' && <DisplayAttendees attendees={this.state.attendees} />}
         {this.state.currentView === 'add' && <AddAttendee onAddAttendee={this.handleAddAttendee} attendees={this.state.attendees} />}
-        {this.state.currentView === 'delete' && <DeleteAttendee />}
+        {this.state.currentView === 'delete' && <DeleteAttendee attendees={this.state.attendees} onDeleteAttendee={this.handleDeleteAttendee} />}
         {this.state.currentView === 'seatmap' && <SeatMap attendees={this.state.attendees} />}
       </div>
     );
@@ -354,19 +361,239 @@ class AddAttendee extends React.Component {
    DELETE ATTENDEE COMPONENT (Q5)
 ========================================= */
 class DeleteAttendee extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      deleteMethod: 'seat', // either by 'seat' or 'namePhone'
+      seatNumber: '',
+      name: '',
+      phone: '',
+      error: '',
+      success: ''
+    };
+  }
+
+  // method toggle
+  handleMethodChange = (method) => {
+    this.setState({
+      deleteMethod: method,
+      seatNumber: '',
+      name: '',
+      phone: '',
+      error: '',
+      success: ''
+    });
+  }
+
+  // input changes
+  handleInputChange = (event) => {
+    const { name, value } = event.target;
+    this.setState({ [name]: value, error: '', success: '' });
+  }
+
+  // del by seat number
+  handleDeleteBySeat = (event) => {
+    event.preventDefault();
+
+    const seatNumber = parseInt(this.state.seatNumber);
+
+    // vvalidate seat number entered
+    if (!this.state.seatNumber || isNaN(seatNumber) || seatNumber < 1 || seatNumber > 10) {
+      this.setState({ error: 'Please enter a valid seat number (1-10).' });
+      return;
+    }
+
+    // check if seat exists
+    const attendee = this.props.attendees.find(a => a.seatNumber === seatNumber);
+    if (!attendee) {
+      this.setState({ error: `No reservation found for seat ${seatNumber}.` });
+      return;
+    }
+
+    // if true - delete the attendee
+    this.props.onDeleteAttendee(seatNumber);
+
+    this.setState({
+      seatNumber: '',
+      error: '',
+      success: `Reservation for seat ${seatNumber} (${attendee.name}) cancelled successfully!`
+    });
+  }
+
+  // del by name/phone
+  handleDeleteByNamePhone = (event) => {
+    event.preventDefault();
+
+    const { name, phone } = this.state;
+
+    // validate fields filled
+    if (!name.trim() || !phone.trim()) {
+      this.setState({ error: 'Please fill in both name and phone.' });
+      return;
+    }
+
+    // find matching attendee
+    const attendeeIndex = this.props.attendees.findIndex(
+      a => a.name.toLowerCase() === name.toLowerCase().trim() &&
+           a.phone === phone.trim()
+    );
+
+    if (attendeeIndex === -1) {
+      this.setState({ error: 'No matching reservation found. Please check name and phone.' });
+      return;
+    }
+
+    const attendee = this.props.attendees[attendeeIndex];
+
+    // del the attendee
+    this.props.onDeleteAttendee(attendee.seatNumber);
+
+    this.setState({
+      name: '',
+      phone: '',
+      error: '',
+      success: `Reservation for ${attendee.name} (seat ${attendee.seatNumber}) cancelled successfully!`
+    });
+  }
+
   render() {
+    const { deleteMethod, seatNumber, name, phone, error, success } = this.state;
+
     return (
       <div>
         <h2>Cancel Reservation</h2>
 
-        {/* TODO: Create a form to delete an attendee */}
+        {error && (
+          <div style={{ color: '#dc3545', backgroundColor: '#f8d7da', padding: '10px', borderRadius: '4px', marginBottom: '15px' }}>
+            {error}
+          </div>
+        )}
 
-        {/* Options:
-            - Delete by Seat Number
-            - Delete by Name/Phone
-        */}
+        {success && (
+          <div style={{ color: '#155724', backgroundColor: '#d4edda', padding: '10px', borderRadius: '4px', marginBottom: '15px' }}>
+            {success}
+          </div>
+        )}
 
-        {/* TODO: On Submit → Remove attendee from reservation list */}
+        <div style={{ marginBottom: '20px' }}>
+          <label style={{ fontWeight: 'bold', marginRight: '15px' }}>Delete Method:</label>
+          <button
+            type="button"
+            onClick={() => this.handleMethodChange('seat')}
+            style={{
+              padding: '8px 16px',
+              marginRight: '10px',
+              backgroundColor: deleteMethod === 'seat' ? '#007bff' : '#f0f0f0',
+              color: deleteMethod === 'seat' ? 'white' : 'black',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            By Seat Number
+          </button>
+          <button
+            type="button"
+            onClick={() => this.handleMethodChange('namePhone')}
+            style={{
+              padding: '8px 16px',
+              backgroundColor: deleteMethod === 'namePhone' ? '#007bff' : '#f0f0f0',
+              color: deleteMethod === 'namePhone' ? 'white' : 'black',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            By Name & Phone
+          </button>
+        </div>
+
+        {deleteMethod === 'seat' ? (
+          <form onSubmit={this.handleDeleteBySeat} style={{ maxWidth: '500px' }}>
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                Seat Number (1-10):
+              </label>
+              <input
+                type="number"
+                name="seatNumber"
+                value={seatNumber}
+                onChange={this.handleInputChange}
+                min="1"
+                max="10"
+                placeholder="Enter seat number"
+                style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#dc3545',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}
+            >
+              Cancel Reservation
+            </button>
+          </form>
+        ) : (
+          <form onSubmit={this.handleDeleteByNamePhone} style={{ maxWidth: '500px' }}>
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                Name:
+              </label>
+              <input
+                type="text"
+                name="name"
+                value={name}
+                onChange={this.handleInputChange}
+                placeholder="Enter registered name"
+                style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+                required
+              />
+            </div>
+
+            <div style={{ marginBottom: '15px' }}>
+              <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold' }}>
+                Phone:
+              </label>
+              <input
+                type="tel"
+                name="phone"
+                value={phone}
+                onChange={this.handleInputChange}
+                placeholder="Enter registered phone"
+                style={{ width: '100%', padding: '8px', border: '1px solid #ccc', borderRadius: '4px' }}
+                required
+              />
+            </div>
+
+            <button
+              type="submit"
+              style={{
+                padding: '10px 20px',
+                backgroundColor: '#dc3545',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer',
+                fontSize: '16px'
+              }}
+            >
+              Cancel Reservation
+            </button>
+          </form>
+        )}
+
+        <p style={{ marginTop: '20px', color: '#666' }}>
+          Current Reservations: {this.props.attendees.length} / 10
+        </p>
       </div>
     );
   }
